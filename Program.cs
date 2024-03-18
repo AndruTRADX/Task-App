@@ -26,6 +26,7 @@ internal class Program
           ShowMenuTasksList();
           break;
         case MenuOptions.Exit:
+          PrintConsoleLines(30);
           Console.WriteLine("Saliendo...");
           break;
         default:
