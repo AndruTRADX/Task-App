@@ -16,19 +16,24 @@ namespace ToDo
       do
       {
         menuSelected = ShowMainMenu();
-        if (menuSelected == 1)
+
+        if ((MenuOptions)menuSelected == MenuOptions.Add)
         {
           ShowMenuAdd();
         }
-        else if (menuSelected == 2)
+        else if ((MenuOptions)menuSelected == MenuOptions.Remove)
         {
           ShowMenuRemove();
         }
-        else if (menuSelected == 3)
+        else if ((MenuOptions)menuSelected == MenuOptions.List)
         {
-          ShowMenuTasksLits();
+          ShowMenuTasksList();
         }
-      } while (menuSelected != 4);
+        else
+        {
+          OptionNoValid();
+        }
+      } while ((MenuOptions)menuSelected != MenuOptions.Exit);
     }
 
     public static int ShowMainMenu()
@@ -42,8 +47,8 @@ namespace ToDo
       Console.WriteLine("4. Salir");
 
       // Read line
-      string line = Console.ReadLine();
-      return Convert.ToInt32(line);
+      string inputOptionSelected = Console.ReadLine();
+      return Convert.ToInt32(inputOptionSelected);
     }
 
     public static void ShowMenuRemove()
@@ -52,18 +57,14 @@ namespace ToDo
       {
         Console.WriteLine("Ingrese el número de la tarea a remover: ");
 
-        // Show current task
-        for (int i = 0; i < TaskList.Count; i++)
-        {
-          Console.WriteLine(i + 1 + ". " + TaskList[i]);
-        }
-
+        PrintConsoleLines(30);
+        PrintAllTasks(TaskList);
         PrintConsoleLines(30);
 
-        string inputTask = Console.ReadLine();
+        string inputOptionSelected = Console.ReadLine();
 
         // Remove one position
-        int indexToRemove = Convert.ToInt32(inputTask) - 1;
+        int indexToRemove = Convert.ToInt32(inputOptionSelected) - 1;
         if (indexToRemove > -1)
         {
           if (TaskList.Count > 0)
@@ -95,7 +96,7 @@ namespace ToDo
       }
     }
 
-    public static void ShowMenuTasksLits()
+    public static void ShowMenuTasksList()
     {
       if (TaskList == null || TaskList.Count == 0)
       {
@@ -103,16 +104,21 @@ namespace ToDo
       }
       else
       {
-        for (int i = 0; i < TaskList.Count; i++)
-        {
-          Console.WriteLine(i + 1 + ". " + TaskList[i]);
-        }
-
+        PrintConsoleLines(30);
+        PrintAllTasks(TaskList);
         PrintConsoleLines(30);
       }
     }
 
     // Utilities
+    public static void PrintAllTasks(List<string> TaskList)
+    {
+      for (int i = 0; i < TaskList.Count; i++)
+      {
+        Console.WriteLine(i + 1 + ". " + TaskList[i]);
+      }
+    }
+
     public static void PrintConsoleLines(int linesQuantity)
     {
       var sb = new StringBuilder();
@@ -122,7 +128,21 @@ namespace ToDo
         sb.Append('-');
       }
 
-      Console.WriteLine(sb);
+      Console.WriteLine(sb.ToString());
+    }
+
+    public static void OptionNoValid()
+    {
+      PrintConsoleLines(30);
+      Console.WriteLine("Opción no válida, por favor selecciona una opción válida");
+    }
+
+    public enum MenuOptions
+    {
+      Add = 1,
+      Remove = 2,
+      List = 3,
+      Exit = 4
     }
   }
 }
