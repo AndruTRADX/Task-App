@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
+using static MenuUtils.MenuUtils;
 
 namespace ToDo
 {
@@ -29,10 +30,6 @@ namespace ToDo
         {
           ShowMenuTasksList();
         }
-        else
-        {
-          OptionNoValid();
-        }
       } while ((MenuOptions)menuSelected != MenuOptions.Exit);
     }
 
@@ -59,24 +56,25 @@ namespace ToDo
 
         PrintConsoleLines(30);
         PrintAllTasks(TaskList);
-        PrintConsoleLines(30);
 
         string inputOptionSelected = Console.ReadLine();
 
         // Remove one position
         int indexToRemove = Convert.ToInt32(inputOptionSelected) - 1;
-        if (indexToRemove > -1)
+        if (indexToRemove > -1 || TaskList.Count > 0)
         {
-          if (TaskList.Count > 0)
-          {
-            string task = TaskList[indexToRemove];
-            TaskList.RemoveAt(indexToRemove);
-            Console.WriteLine("Tarea " + task + " eliminada");
-          }
+          string task = TaskList[indexToRemove];
+          TaskList.RemoveAt(indexToRemove);
+          Console.WriteLine("Tarea " + task + " eliminada");
         }
       }
-      catch (Exception)
+      catch (FormatException)
       {
+        Console.WriteLine("Error: Ingrese un número válido.");
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
 
@@ -91,58 +89,24 @@ namespace ToDo
 
         Console.WriteLine("Tarea registrada");
       }
-      catch (Exception)
+      catch (Exception ex)
       {
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
 
     public static void ShowMenuTasksList()
     {
+      PrintConsoleLines(30);
+
       if (TaskList == null || TaskList.Count == 0)
       {
         Console.WriteLine("No hay tareas por realizar");
       }
       else
       {
-        PrintConsoleLines(30);
         PrintAllTasks(TaskList);
-        PrintConsoleLines(30);
       }
-    }
-
-    // Utilities
-    public static void PrintAllTasks(List<string> TaskList)
-    {
-      for (int i = 0; i < TaskList.Count; i++)
-      {
-        Console.WriteLine(i + 1 + ". " + TaskList[i]);
-      }
-    }
-
-    public static void PrintConsoleLines(int linesQuantity)
-    {
-      var sb = new StringBuilder();
-
-      for (int i = 0; i < linesQuantity && i < 30; i++)
-      {
-        sb.Append('-');
-      }
-
-      Console.WriteLine(sb.ToString());
-    }
-
-    public static void OptionNoValid()
-    {
-      PrintConsoleLines(30);
-      Console.WriteLine("Opción no válida, por favor selecciona una opción válida");
-    }
-
-    public enum MenuOptions
-    {
-      Add = 1,
-      Remove = 2,
-      List = 3,
-      Exit = 4
     }
   }
 }
